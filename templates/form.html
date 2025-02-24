@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Flask Form</title>
+	<title>Custom Form</title>
 </head>
 
 <body>
-	<h2>Submit Your Details</h2>
+	<h2>Fill the Form</h2>
 	<form method="POST">
-		<label for="name">Name:</label>
+		<label>Name:</label><br>
 		<input type="text" name="name" required><br><br>
 
-		<label for="email">Email:</label>
+		<label>Email:</label><br>
 		<input type="email" name="email" required><br><br>
 
-		<label for="message">Message:</label>
+		<label>Message:</label><br>
 		<textarea name="message" required></textarea><br><br>
 
-		<button type="submit">Submit</button>
+		<input type="submit" value="Submit">
 	</form>
+
+	{% if data %}
+	<h2>Submitted Data</h2>
+	<p><strong>Name:</strong> {{ data.name }}</p>
+	<p><strong>Email:</strong> {{ data.email }}</p>
+	<p><strong>Message:</strong> {{ data.message }}</p>
+	{% endif %}
 </body>
 
 </html>

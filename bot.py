@@ -3,36 +3,36 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 
-# Automatically download and setup the correct WebDriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
+# Set up the browser
+options = webdriver.ChromeOptions()
+options.add_experimental_option("detach", True)  # Keeps the browser open
+driver = webdriver.Chrome(options=options)
 
-# Set up WebDriver
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service)
+try:
+    # Open the form page
+    driver.get("http://127.0.0.1:5000/")
+    time.sleep(2)  # Wait for the page to load
 
-# Open a sample form (replace with any actual form URL)
-driver.get("https://docs.google.com/forms/d/e/1FAIpQLScxfFwR8U2buJ8nwGQdoJmUi0--YL8bxkGMUbk8lrREbTgx2g/viewform?usp=header")
+    # Fill the form
+    name_input = driver.find_element(By.NAME, "name")
+    email_input = driver.find_element(By.NAME, "email")
+    message_input = driver.find_element(By.NAME, "message")
+    submit_button = driver.find_element(By.XPATH, "//input[@type='submit']")
 
-# Fill out the form (adjust element names accordingly)
-name_field = driver.find_element(By.NAME, "entry.2005620554")
-name_field.send_keys("John Doe")
+    name_input.send_keys("John Doe")
+    email_input.send_keys("john@example.com")
+    message_input.send_keys("This is an automated test.")
+    submit_button.click()
 
-email_field = driver.find_element(By.NAME, "entry.1045781291")
-email_field.send_keys("johndoe@example.com")
+    time.sleep(2)  # Wait for submission to complete
 
-email_field = driver.find_element(By.NAME, "entry.1166974658")
-email_field.send_keys("johndoe@example.com")
+    # Take a screenshot to verify submission
+    driver.save_screenshot("form_submission.png")
 
-email_field = driver.find_element(By.NAME, "entry.839337160")
-email_field.send_keys("johndoe@example.com")
+    print("✅ Form submitted successfully! Screenshot saved.")
 
-submit_button = driver.find_element(By.XPATH, "//span[text()='Submit']")
-submit_button.click()
+except Exception as e:
+    print(f"❌ Error: {e}")
 
-
-# Wait for 3 seconds before closing
-# time.sleep(3)
-# input("Press Enter to close the browser...")
-
-# driver.quit()
+finally:
+    driver.quit()  # Close the browser
