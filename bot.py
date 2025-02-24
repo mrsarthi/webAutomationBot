@@ -33,6 +33,6 @@ submit_button.click()
 
 # Wait for 3 seconds before closing
 # time.sleep(3)
-input("Press Enter to close the browser...")
+# input("Press Enter to close the browser...")
 
-driver.quit()
+# driver.quit()
