@@ -1,35 +1,59 @@
+import time
+import random
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-import time
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
 
-options = webdriver.ChromeOptions()
-options.add_experimental_option("detach", True)
-driver = webdriver.Chrome(options=options)
+# Load dataset
+df = pd.read_csv("training_data.csv")
 
-try:
-    driver.get("http://amethystmosquito.onpella.app/")
-    time.sleep(2)
+# Train ML model for message generation
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(df["Message"])
+y = range(len(df))
 
-    name_input = driver.find_element(By.NAME, "name")
-    email_input = driver.find_element(By.NAME, "email")
-    message_input = driver.find_element(By.NAME, "message")
-    submit_button = driver.find_element(By.XPATH, "//button[@type='submit']")
+model = MultinomialNB()
+model.fit(X, y)
 
-    name_input.send_keys("John Doe")
-    email_input.send_keys("john@example.com")
-    message_input.send_keys("This is an automated test.")
-
-    submit_button.click()
-
-    time.sleep(3)
-    # driver.save_screenshot("form_submission.png")
-
-    print("✅ Form submitted successfully! Screenshot saved.")
+# Generate a realistic message
 
 
-except Exception as e:
-    print(f"❌ Error: {e}")
+def generate_message():
+    sample_text = ["sample input"]  # Use a non-empty placeholder
+    transformed_text = vectorizer.transform(sample_text)
+    random_index = model.predict(transformed_text)[0]
+    return df["Message"].iloc[random_index]
 
-finally:
-    driver.quit()
+# Generate realistic names and emails from dataset
+
+
+def generate_name():
+    return random.choice(df["Name"].tolist())
+
+
+def generate_email():
+    return random.choice(df["Email"].tolist())
+
+
+# Start Selenium WebDriver
+driver = webdriver.Chrome()
+driver.get("http://127.0.0.1:5000")
+time.sleep(2)
+
+# Fill in the form using ML-generated data
+driver.find_element(By.ID, "name").send_keys(generate_name())
+driver.find_element(By.ID, "email").send_keys(generate_email())
+driver.find_element(By.ID, "message").send_keys(generate_message())
+
+# Submit form
+driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+time.sleep(3)
+
+# Screenshot to verify form submission
+driver.save_screenshot("form_submission.png")
+
+# Close browser
+driver.quit()
