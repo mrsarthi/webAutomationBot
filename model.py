@@ -4,7 +4,7 @@ from faker import Faker
 fake = Faker()
 data = []
 
-for _ in range(1000):  # Generate 1000 samples
+for _ in range(1000):
     name = fake.name()
     email = fake.email()
     message = fake.sentence()
