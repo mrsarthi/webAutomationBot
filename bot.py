@@ -33,7 +33,7 @@ def generate_email():
 
 
 driver = webdriver.Chrome()
-driver.get("https://lavendergalliform.onpella.app/")
+driver.get("https://custom-form-penh.onrender.com")
 time.sleep(2)
 
 driver.find_element(By.ID, "name").send_keys(generate_name())
